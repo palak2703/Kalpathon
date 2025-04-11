@@ -3,11 +3,10 @@ import json
 import difflib
 from datetime import datetime
 
-# In-memory databases
+# Storing details temporary
 users = []
 items = []
 current_user = None
-
 
 def register():
     print("\n--- Register New User ---")
@@ -41,7 +40,8 @@ def require_login():
 # --------- Item Reporting ---------
 
 def input_item():
-    if not require_login(): return
+    if not require_login():
+        return
     print("\n--- Report an Item ---")
     item = {
         "id": str(uuid.uuid4()),
@@ -73,7 +73,8 @@ def list_items():
         print(f"{item['id']} | {item['type'].upper()} | {item['title']} | {item['date']} | {item['location']} | by {item['reportedBy']}")
 
 def match_by_id():
-    if not require_login(): return
+    if not require_login():
+        return
     item_id = input("Enter lost item ID to find matches: ").strip()
     lost_item = next((i for i in items if i["id"] == item_id and i["type"] == "lost" and i["reportedBy"] == current_user['username']), None)
     if not lost_item:
@@ -90,6 +91,7 @@ def match_by_id():
 # --------- CLI Menu ---------
 
 def main_menu():
+    global current_user  # ✅ Moved to the top of the function
     while True:
         print("\n📋 Main Menu")
         if current_user:
@@ -113,7 +115,6 @@ def main_menu():
             elif choice == "3":
                 match_by_id()
             elif choice == "4":
-                global current_user
                 print(f"👋 Logged out from {current_user['username']}")
                 current_user = None
             elif choice == "0":
