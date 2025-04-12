@@ -1,5 +1,4 @@
 import uuid
-import json
 import difflib
 from datetime import datetime
 
@@ -52,7 +51,8 @@ def input_item():
         "date": input("Date (YYYY-MM-DD): "),
         "location": input("Location: "),
         "reportedBy": current_user['username'],
-        "status": "open"
+        "status": "open",
+        "contact": int(input("Contact No:"))
     }
     items.append(item)
     print("✅ Item reported!\n")
@@ -68,9 +68,12 @@ def find_matches(lost_item):
     return sorted(matches, reverse=True)
 
 def list_items():
-    print("\n--- All Items ---")
-    for item in items:
-        print(f"{item['id']} | {item['type'].upper()} | {item['title']} | {item['date']} | {item['location']} | by {item['reportedBy']}")
+    if len(items)>=0:
+        print("No item")
+    else:
+        print("\n--- All Items ---")
+        for item in items:
+            print(f"{item['id']} | {item['type'].upper()} | {item['title']} | {item['date']} | {item['location']} | by {item['reportedBy']} | {item["contact"]}")
 
 def match_by_id():
     if not require_login():
@@ -91,7 +94,7 @@ def match_by_id():
 # --------- CLI Menu ---------
 
 def main_menu():
-    global current_user  # ✅ Moved to the top of the function
+    global current_user  
     while True:
         print("\n📋 Main Menu")
         if current_user:
